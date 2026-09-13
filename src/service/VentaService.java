@@ -3,9 +3,8 @@ package service;
 import model.Boleto;
 import model.Evento;
 import model.Venta;
+import util.Repositorio;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,7 +14,7 @@ import java.util.List;
  */
 public class VentaService {
 
-    private final List<Venta> ventasRegistradas = new ArrayList<>();
+    private final Repositorio<Venta> repositorioVentas = new Repositorio<>();
 
     /**
      * Verifica si la cantidad solicitada, sumada a las entradas ya vendidas
@@ -54,7 +53,7 @@ public class VentaService {
         }
 
         Venta venta = new Venta(evento, boleto, cantidad);
-        ventasRegistradas.add(venta);
+        repositorioVentas.agregar(venta);
         return venta;
     }
 
@@ -63,7 +62,7 @@ public class VentaService {
      * recorriendo todo el historial de ventas.
      */
     public int calcularEntradasVendidas(Evento evento) {
-        return ventasRegistradas.stream()
+        return repositorioVentas.obtenerTodos().stream()
                 .filter(venta -> venta.getEvento() == evento)
                 .mapToInt(Venta::getCantidad)
                 .sum();
@@ -73,7 +72,7 @@ public class VentaService {
      * Retorna el historial de ventas de forma de solo lectura.
      */
     public List<Venta> getVentasRegistradas() {
-        return Collections.unmodifiableList(ventasRegistradas);
+        return repositorioVentas.obtenerTodos();
     }
 
     private void validarEntrada(Evento evento, int cantidadSolicitada) {
