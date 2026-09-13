@@ -1,5 +1,5 @@
 import model.*;
-import services.VentaService;
+import service.VentaService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
