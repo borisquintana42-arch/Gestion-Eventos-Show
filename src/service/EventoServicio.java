@@ -1,4 +1,4 @@
-package servicio;
+package service;
 
 import model.Evento;
 

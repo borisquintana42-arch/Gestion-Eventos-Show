@@ -2,7 +2,7 @@ package prueba;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import servicio.EventoServicio;
+import service.EventoServicio;
 import model.Evento;
 
 public class PruebaEventos {
