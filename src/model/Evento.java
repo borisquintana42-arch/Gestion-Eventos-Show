@@ -50,6 +50,10 @@ public class Evento {
     }
 
     public void setNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacio.");
+        }
+
         this.nombre = nombre;
     }
 
@@ -58,6 +62,10 @@ public class Evento {
     }
 
     public void setFecha(LocalDate fecha) {
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha no puede estar vacia.");
+        }
+
         this.fecha = fecha;
     }
 
@@ -66,6 +74,10 @@ public class Evento {
     }
 
     public void setHora(LocalTime hora) {
+        if (hora == null) {
+            throw new IllegalArgumentException("La hora no puede estar vacia.");
+        }
+
         this.hora = hora;
     }
 
@@ -74,6 +86,12 @@ public class Evento {
     }
 
     public void setCapacidadMaxima(int capacidadMaxima) {
+
+        if (capacidadMaxima <= 0) {
+            throw new IllegalArgumentException(
+                    "La capacidad debe ser mayor que cero."
+            );
+        }
 
         if (capacidadMaxima < entradasVendidas) {
             throw new IllegalArgumentException(
@@ -106,7 +124,7 @@ public class Evento {
 
         entradasVendidas += cantidad;
     }
-    
+
     @Override
     public String toString() {
         return nombre;
