@@ -12,7 +12,6 @@ public class Evento {
     private LocalDate fecha;
     private LocalTime hora;
     private int capacidadMaxima;
-    private int entradasVendidas;
 
     public Evento(String nombre, LocalDate fecha, LocalTime hora, int capacidadMaxima) {
 
@@ -37,7 +36,6 @@ public class Evento {
         this.fecha = fecha;
         this.hora = hora;
         this.capacidadMaxima = capacidadMaxima;
-        this.entradasVendidas = 0;
     }
 
 
@@ -93,36 +91,7 @@ public class Evento {
             );
         }
 
-        if (capacidadMaxima < entradasVendidas) {
-            throw new IllegalArgumentException(
-                    "La capacidad no puede ser menor que las entradas ya vendidas."
-            );
-        }
-
         this.capacidadMaxima = capacidadMaxima;
-    }
-
-    public int getEntradasVendidas() {
-        return entradasVendidas;
-    }
-
-    public int getEntradasDisponibles() {
-        return capacidadMaxima - entradasVendidas;
-    }
-
-    public boolean hayAforo(int cantidad) {
-        return cantidad > 0 && cantidad <= getEntradasDisponibles();
-    }
-
-    public void registrarVenta(int cantidad) {
-
-        if (!hayAforo(cantidad)) {
-            throw new IllegalArgumentException(
-                    "No hay suficiente aforo disponible."
-            );
-        }
-
-        entradasVendidas += cantidad;
     }
 
     @Override
