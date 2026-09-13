@@ -3,7 +3,7 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Evento {
+public class Evento implements Id {
 
     private static int contadorId = 1;
 
@@ -39,6 +39,7 @@ public class Evento {
     }
 
 
+    @Override
     public int getId() {
         return id;
     }
