@@ -5,7 +5,7 @@ package model;
  * Guarda el evento, el boleto vendido, la cantidad de boletos
  * y el total a pagar (cantidad x precio unitario del boleto).
  */
-public class Venta {
+public class Venta implements Imprimible {
 
     private final Evento evento;
     private final Boleto boleto;
@@ -46,6 +46,13 @@ public class Venta {
 
     public double getTotalPagar() {
         return totalPagar;
+    }
+
+    @Override
+    public String generarDetalleImpresion() {
+        return "TICKET DE VENTA - Evento: " + evento.getNombre()
+                + " | Boletos: " + cantidad + " (" + getTipoBoleto() + ")"
+                + " | Total a pagar: $" + totalPagar;
     }
 
     @Override

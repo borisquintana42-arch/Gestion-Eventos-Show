@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * Boleto con acceso VIP al evento.
  * Su precio por defecto es de {@value #PRECIO_DEFAULT} unidades monetarias.
@@ -19,5 +21,12 @@ public class BoletoVIP extends Boleto {
      */
     public BoletoVIP(double precio) {
         super(TIPO, precio);
+    }
+
+    @Override
+    public List<String> getBeneficios() {
+        return List.of("Asiento reservado en zona exclusiva",
+                "Fila rápida de acceso",
+                "Bebida de cortesía");
     }
 }

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * Boleto de entrada general.
  * Su precio por defecto es de {@value #PRECIO_DEFAULT} unidades monetarias.
@@ -19,5 +21,10 @@ public class BoletoGeneral extends Boleto {
      */
     public BoletoGeneral(double precio) {
         super(TIPO, precio);
+    }
+
+    @Override
+    public List<String> getBeneficios() {
+        return List.of("Acceso al área general del evento");
     }
 }

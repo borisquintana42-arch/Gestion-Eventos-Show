@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * Clase abstracta base para todos los tipos de boletos del sistema.
  * Define las propiedades comunes (tipo y precio) que comparten las
@@ -37,4 +39,11 @@ public abstract class Boleto {
     public String toString() {
         return tipo + " ($" + precio + ")";
     }
+
+    /**
+     * Devuelve la lista de beneficios incluidos en este tipo de boleto.
+     *
+     * @return lista con los beneficios del boleto
+     */
+    public abstract List<String> getBeneficios();
 }
