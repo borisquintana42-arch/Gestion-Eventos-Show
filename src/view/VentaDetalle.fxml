@@ -28,18 +28,18 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="LblBeneficios" layoutX="215.0" layoutY="107.0" prefHeight="30.0" prefWidth="196.0" text="Beneficios Mostrados">
+      <Label fx:id="LblBeneficios" layoutX="223.0" layoutY="107.0" prefHeight="30.0" prefWidth="482.0" text="Beneficios Mostrados">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="LblPrecio" layoutX="238.0" layoutY="152.0" prefHeight="30.0" prefWidth="168.0" text="precios Mostrados">
+      <Label fx:id="LblPrecio" layoutX="223.0" layoutY="152.0" prefHeight="30.0" prefWidth="482.0" text="precios Mostrados">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="txtCantidad" layoutX="255.0" layoutY="203.0" />
-      <Label fx:id="LblAforo" layoutX="254.0" layoutY="251.0" prefHeight="30.0" prefWidth="150.0" text="Aforo disponible">
+      <TextField fx:id="txtCantidad" layoutX="254.0" layoutY="202.0" />
+      <Label fx:id="LblAforo" layoutX="254.0" layoutY="251.0" prefHeight="30.0" prefWidth="482.0" text="Aforo disponible">
          <font>
             <Font size="20.0" />
          </font>
@@ -57,7 +57,7 @@
       <Button fx:id="btnCerrarVenta" layoutX="351.0" layoutY="343.0" mnemonicParsing="false" onAction="#cerrarVenta" prefHeight="26.0" prefWidth="38.0" text="x" />
       <Button fx:id="btnComprar" layoutX="99.0" layoutY="345.0" mnemonicParsing="false" onAction="#registrarCompra" text="Comprar" />
       <Button fx:id="btnCancelar" layoutX="223.0" layoutY="344.0" mnemonicParsing="false" onAction="#cancelarCompra" text="Cancelar" />
-      <Label fx:id="LblTotal" layoutX="254.0" layoutY="292.0" prefHeight="30.0" prefWidth="49.0" text="Total">
+      <Label fx:id="LblTotal" layoutX="163.0" layoutY="292.0" prefHeight="30.0" prefWidth="570.0" text="Total">
          <font>
             <Font size="20.0" />
          </font>

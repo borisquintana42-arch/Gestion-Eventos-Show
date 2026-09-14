@@ -25,6 +25,6 @@
       <Label layoutX="49.0" layoutY="141.0" prefHeight="26.0" prefWidth="81.0" text="Fecha" />
       <Label layoutX="49.0" layoutY="208.0" prefHeight="26.0" prefWidth="81.0" text="Hora" />
       <Label layoutX="49.0" layoutY="272.0" prefHeight="26.0" prefWidth="106.0" text="Capacidad máxima" />
-      <Button fx:id="btnCerrar1" layoutX="49.0" layoutY="25.0" mnemonicParsing="false" onAction="#cerrarVista" prefHeight="26.0" prefWidth="55.0" text="Volver" />
+      <Button fx:id="btnCerrar1" layoutX="49.0" layoutY="25.0" mnemonicParsing="false" onAction="#volverBuscarEditar" prefHeight="26.0" prefWidth="55.0" text="Volver" />
    </children>
 </AnchorPane>

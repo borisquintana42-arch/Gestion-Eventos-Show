@@ -34,9 +34,21 @@ public class MenuController {
 
     @FXML
     private void initialize() {
+
         ventaController.cargarTiposBoleto(cmbBoleto);
+
+        // Carga inicial
         ventaController.cargarEventos(cmbEvento);
         reporteController.cargarEventos(cmbEventoResumen);
+
+        // Cada vez que se abre el ComboBox, refresca los eventos
+        cmbEvento.setOnShowing(event ->
+                ventaController.cargarEventos(cmbEvento)
+        );
+
+        cmbEventoResumen.setOnShowing(event ->
+                reporteController.cargarEventos(cmbEventoResumen)
+        );
     }
 
     /**
