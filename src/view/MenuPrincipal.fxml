@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -36,12 +37,56 @@
           </TitledPane>
           <TitledPane animated="false" text="Venta de boletos">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="28.0" layoutY="183.0" text="Evento:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="cmbEvento" layoutX="245.0" layoutY="186.0" prefWidth="150.0" />
+                        <Label layoutX="25.0" layoutY="235.0" text="Tipo de boleto:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="cmbBoleto" layoutX="245.0" layoutY="238.0" prefWidth="150.0" />
+                        <Label layoutX="63.0" layoutY="27.0" prefHeight="55.0" prefWidth="295.0" text="Venta de boletos">
+                           <font>
+                              <Font size="38.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="68.0" layoutY="93.0" text="Ingrese la información solicitada&#10;para comprar los boletos">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="185.0" layoutY="297.0" mnemonicParsing="false" onAction="#mostrarVenta" text="Enviar" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
           <TitledPane animated="false" text="Resumen de eventos">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="33.0" layoutY="14.0" prefHeight="55.0" prefWidth="354.0" text="Resumen de eventos">
+                           <font>
+                              <Font size="38.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="33.0" layoutY="80.0" text="Seleccione el evento que desea&#10;consultar">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="33.0" layoutY="173.0" text="Evento:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="cmbEventoResumen" layoutX="234.0" layoutY="175.0" prefWidth="150.0" />
+                        <Button layoutX="274.0" layoutY="225.0" mnemonicParsing="false" onAction="#mostrarResumenEvento" text="Ver resumen" />
+                     </children></AnchorPane>
             </content>
           </TitledPane>
         </panes>
