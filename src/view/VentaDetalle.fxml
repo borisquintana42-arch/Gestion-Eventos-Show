@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.VentaController">
    <children>
       <Label layoutX="37.0" layoutY="107.0" text="Beneficios:">
@@ -58,7 +57,7 @@
       <Button fx:id="btnCerrarVenta" layoutX="351.0" layoutY="343.0" mnemonicParsing="false" onAction="#cerrarVenta" prefHeight="26.0" prefWidth="38.0" text="x" />
       <Button fx:id="btnComprar" layoutX="99.0" layoutY="345.0" mnemonicParsing="false" onAction="#registrarCompra" text="Comprar" />
       <Button fx:id="btnCancelar" layoutX="223.0" layoutY="344.0" mnemonicParsing="false" onAction="#cancelarCompra" text="Cancelar" />
-      <Label fx:id="LblTotal" layoutX="351.0" layoutY="292.0" prefHeight="30.0" prefWidth="49.0" text="Total">
+      <Label fx:id="LblTotal" layoutX="254.0" layoutY="292.0" prefHeight="30.0" prefWidth="49.0" text="Total">
          <font>
             <Font size="20.0" />
          </font>

@@ -8,7 +8,20 @@ import java.util.ArrayList;
 
 public class EventoServicio {
 
+    private static final EventoServicio INSTANCIA = new EventoServicio();
+
     private final ArrayList<Evento> eventos;
+
+    /**
+     * Devuelve la instancia compartida de EventoServicio usada por todas las
+     * pantallas de la aplicación, para que todas trabajen sobre la misma lista
+     * de eventos durante una ejecución.
+     *
+     * @return la instancia única de EventoServicio
+     */
+    public static EventoServicio getInstance() {
+        return INSTANCIA;
+    }
 
     /**
      * Inicializa el servicio de eventos con una lista vacia.

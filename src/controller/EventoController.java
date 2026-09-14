@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +17,7 @@ import java.time.LocalTime;
 
 public class EventoController {
 
-    private static final EventoServicio eventoServicio = new EventoServicio();
+    private static final EventoServicio eventoServicio = EventoServicio.getInstance();
 
     @FXML
     private TextField txtNombre;
@@ -82,7 +81,12 @@ public class EventoController {
     @FXML
     private void cerrarVista() {
 
-        if (rootCrearEvento.getParent() instanceof Pane parent) {
+        // Esta vista puede ser CrearEvento (rootCrearEvento inyectado)
+        // o EditarEventoDatos (contenedor asignado por setContenedor).
+        if (contenedor != null) {
+            contenedor.getChildren().clear();
+        } else if (rootCrearEvento != null
+                && rootCrearEvento.getParent() instanceof Pane parent) {
             parent.getChildren().remove(rootCrearEvento);
         }
     }
@@ -123,6 +127,21 @@ public class EventoController {
 
     @FXML
     private TableColumn<Evento, Integer> colCapacidad;
+
+    @FXML
+    private TextField txtIdEliminar;
+
+    @FXML
+    private TextField txtNombreEliminar;
+
+    @FXML
+    private DatePicker dpFechaEliminar;
+
+    @FXML
+    private TextField txtHoraEliminar;
+
+    @FXML
+    private TextField txtCapacidadEliminar;
 
     public void setContenedor(Pane contenedor) {
         this.contenedor = contenedor;
@@ -181,6 +200,115 @@ public class EventoController {
         txtCapacidadEditar.setText(
                 String.valueOf(evento.getCapacidadMaxima())
         );
+    }
+
+    @FXML
+    private void cerrarVistaEliminar() {
+        if (contenedor != null) {
+            contenedor.getChildren().clear();
+        }
+    }
+
+    @FXML
+    private void buscarParaEliminar() {
+        try {
+
+            int id = Integer.parseInt(txtIdEliminar.getText());
+
+            Evento evento = eventoServicio.buscarEvento(id);
+
+            if (evento == null) {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText(null);
+                alerta.setContentText("No existe un evento con ese ID.");
+                alerta.showAndWait();
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/EliminarEventoDatos.fxml")
+            );
+
+            Parent vista = loader.load();
+            vista.setId("eliminarEventoDatosView");
+
+            EventoController controller = loader.getController();
+
+            controller.setContenedor(contenedor);
+            controller.cargarEventoEliminar(evento);
+
+            contenedor.getChildren().setAll(vista);
+
+        } catch (NumberFormatException e) {
+
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Ingrese un ID válido.");
+            alerta.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cargarEventoEliminar(Evento evento) {
+
+        this.eventoEnEdicion = evento;
+
+        txtNombreEliminar.setText(evento.getNombre());
+        dpFechaEliminar.setValue(evento.getFecha());
+        txtHoraEliminar.setText(evento.getHora().toString());
+
+        txtCapacidadEliminar.setText(
+                String.valueOf(evento.getCapacidadMaxima())
+        );
+    }
+
+    @FXML
+    private void eliminarEvento() {
+        try {
+
+            Alert confirmar = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmar.setTitle("Confirmar eliminación");
+            confirmar.setHeaderText(null);
+            confirmar.setContentText(
+                    "¿Seguro que desea eliminar el evento \""
+                            + eventoEnEdicion.getNombre() + "\"?"
+            );
+
+            if (confirmar.showAndWait().filter(ButtonType.OK::equals).isEmpty()) {
+                return;
+            }
+
+            boolean eliminado = eventoServicio.eliminarEvento(
+                    eventoEnEdicion.getId()
+            );
+
+            Alert alerta;
+            if (eliminado) {
+                alerta = new Alert(Alert.AlertType.INFORMATION);
+                alerta.setTitle("Evento eliminado");
+                alerta.setHeaderText(null);
+                alerta.setContentText("El evento fue eliminado correctamente.");
+            } else {
+                alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Error");
+                alerta.setHeaderText(null);
+                alerta.setContentText("No se pudo eliminar el evento.");
+            }
+            alerta.showAndWait();
+
+            if (contenedor != null) {
+                contenedor.getChildren().clear();
+            }
+
+        } catch (Exception e) {
+
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText(e.getMessage());
+            alerta.showAndWait();
+        }
     }
 
     @FXML

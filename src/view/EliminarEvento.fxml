@@ -8,12 +8,12 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EventoController">
    <children>
-      <Label layoutX="45.0" layoutY="45.0" prefHeight="39.0" prefWidth="125.0" text="Editar evento">
+      <Label layoutX="45.0" layoutY="45.0" prefHeight="39.0" prefWidth="125.0" text="Eliminar evento">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="45.0" layoutY="120.0" text="Inglese el ID del evento que desea editar">
+      <Label layoutX="45.0" layoutY="120.0" text="Ingrese el ID del evento que desea eliminar">
          <font>
             <Font size="19.0" />
          </font>

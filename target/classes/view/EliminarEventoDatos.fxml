@@ -20,7 +20,7 @@
       <DatePicker fx:id="dpFechaEliminar" layoutX="179.0" layoutY="151.0" prefHeight="26.0" prefWidth="251.0" />
       <TextField fx:id="txtHoraEliminar" layoutX="179.0" layoutY="218.0" prefHeight="26.0" prefWidth="251.0" />
       <TextField fx:id="txtCapacidadEliminar" layoutX="179.0" layoutY="282.0" prefHeight="26.0" prefWidth="251.0" />
-      <Button fx:id="btnEliminar" layoutX="123.0" layoutY="351.0" mnemonicParsing="false" onAction="#eliminarEvento" text="Guardar cambio" />
+      <Button fx:id="btnEliminar" layoutX="123.0" layoutY="351.0" mnemonicParsing="false" onAction="#eliminarEvento" text="Eliminar evento" />
       <Label layoutX="59.0" layoutY="151.0" prefHeight="26.0" prefWidth="81.0" text="Fecha" />
       <Label layoutX="59.0" layoutY="218.0" prefHeight="26.0" prefWidth="81.0" text="Hora" />
       <Label layoutX="59.0" layoutY="282.0" prefHeight="26.0" prefWidth="106.0" text="Capacidad máxima" />

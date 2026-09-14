@@ -3,11 +3,50 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
+import model.Boleto;
+import model.Evento;
+import service.EventoServicio;
 
 import java.io.IOException;
 
 public class MenuController {
+
+    private final VentaController ventaController = new VentaController();
+    private final ReporteController reporteController = new ReporteController();
+
+    // Misma instancia compartida que usan las pantallas de EventoController.
+    private static final EventoServicio eventoServicio = EventoServicio.getInstance();
+
+    @FXML
+    private StackPane contenidoPane;
+
+    @FXML
+    private ComboBox<Evento> cmbEvento;
+
+    @FXML
+    private ComboBox<Boleto> cmbBoleto;
+
+    @FXML
+    private ComboBox<Evento> cmbEventoResumen;
+
+    @FXML
+    private void initialize() {
+        ventaController.cargarTiposBoleto(cmbBoleto);
+        ventaController.cargarEventos(cmbEvento);
+        reporteController.cargarEventos(cmbEventoResumen);
+    }
+
+    /**
+     * Refresca los combos de venta y resumen con los eventos actuales,
+     * para que siempre reflejen los cambios hechos en otras pantallas.
+     */
+    private void cargarEventosEnCombos() {
+        ventaController.cargarEventos(cmbEvento);
+        reporteController.cargarEventos(cmbEventoResumen);
+    }
 
     @FXML
     private void abrirCrearEvento() {
@@ -73,7 +112,33 @@ public class MenuController {
 
     @FXML
     private void abrirEliminarEvento() {
-        System.out.println("Eliminar evento");
+        try {
+
+            if (!contenidoPane.getChildren().isEmpty()) {
+
+                String idVista = contenidoPane.getChildren().get(0).getId();
+
+                if (idVista != null && idVista.startsWith("eliminarEvento")) {
+                    contenidoPane.getChildren().clear();
+                    return;
+                }
+            }
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/EliminarEvento.fxml")
+            );
+
+            Parent vista = loader.load();
+            vista.setId("eliminarEventoBusquedaView");
+
+            EventoController controller = loader.getController();
+            controller.setContenedor(contenidoPane);
+
+            contenidoPane.getChildren().setAll(vista);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -110,5 +175,75 @@ public class MenuController {
     }
 
     @FXML
-    private StackPane contenidoPane;
+    private void mostrarVenta() {
+        cargarEventosEnCombos();
+
+        Evento evento = cmbEvento.getValue();
+        Boleto boleto = cmbBoleto.getValue();
+
+        if (evento == null) {
+            mostrarError("Seleccione un evento.");
+            return;
+        }
+        if (boleto == null) {
+            mostrarError("Seleccione un tipo de boleto.");
+            return;
+        }
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/VentaDetalle.fxml")
+            );
+
+            Parent vista = loader.load();
+            vista.setId("ventaDetalleView");
+
+            VentaController controller = loader.getController();
+            controller.inicializarDetalle(evento, boleto, contenidoPane);
+
+            contenidoPane.getChildren().setAll(vista);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void mostrarResumenEvento() {
+        cargarEventosEnCombos();
+
+        Evento evento = cmbEventoResumen.getValue();
+
+        if (evento == null) {
+            mostrarError("Seleccione un evento.");
+            return;
+        }
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/ResumenEvento.fxml")
+            );
+
+            Parent vista = loader.load();
+            vista.setId("resumenEventoView");
+
+            ReporteController controller = loader.getController();
+            controller.inicializarResumen(evento, contenidoPane);
+
+            contenidoPane.getChildren().setAll(vista);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert error = new Alert(Alert.AlertType.ERROR);
+        error.setTitle("Error");
+        error.setHeaderText(null);
+        error.setContentText(mensaje);
+        error.showAndWait();
+    }
 }
