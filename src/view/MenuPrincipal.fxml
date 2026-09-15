@@ -17,9 +17,9 @@
             <Font name="THESOLSTICE-Regular" size="28.0" />
          </font>
       </Label>
-      <Accordion layoutX="28.0" layoutY="120.0" prefHeight="453.0" prefWidth="421.0">
+       <Accordion fx:id="menuAccordion" layoutX="28.0" layoutY="120.0" prefHeight="453.0" prefWidth="421.0">
         <panes>
-          <TitledPane animated="false" prefWidth="222.0" text="Administrar eventos y reservas">
+          <TitledPane fx:id="paneAdministrar" animated="false" prefWidth="222.0" text="Administrar eventos y reservas">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="220.0">
                      <children>
@@ -35,7 +35,7 @@
                   </AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Venta de boletos">
+          <TitledPane fx:id="paneVenta" animated="false" text="Venta de boletos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -65,7 +65,7 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Resumen de eventos">
+          <TitledPane fx:id="paneResumen" animated="false" text="Resumen de eventos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

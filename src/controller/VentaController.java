@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.layout.Pane;
 import model.Boleto;
 import model.BoletoGeneral;
@@ -88,7 +89,14 @@ public class VentaController {
         this.boletoSeleccionado = boleto;
         this.contenedor = contenedor;
 
-        LblBeneficios.setText(String.join(", ", boleto.getBeneficios()));
+        LblBeneficios.setWrapText(true);
+        LblBeneficios.setTextOverrun(OverrunStyle.CLIP);
+        LblBeneficios.setPrefWidth(430);
+        LblBeneficios.setPrefHeight(100);
+
+        LblBeneficios.setText(
+                "• " + String.join("\n• ", boleto.getBeneficios())
+        );
         LblPrecio.setText("$ " + boleto.getPrecio());
 
         int aforoDisponible = evento.getCapacidadMaxima()

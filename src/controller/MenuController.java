@@ -3,6 +3,8 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
@@ -24,6 +26,18 @@ public class MenuController {
     private StackPane contenidoPane;
 
     @FXML
+    private Accordion menuAccordion;
+
+    @FXML
+    private TitledPane paneAdministrar;
+
+    @FXML
+    private TitledPane paneVenta;
+
+    @FXML
+    private TitledPane paneResumen;
+
+    @FXML
     private ComboBox<Evento> cmbEvento;
 
     @FXML
@@ -41,13 +55,40 @@ public class MenuController {
         ventaController.cargarEventos(cmbEvento);
         reporteController.cargarEventos(cmbEventoResumen);
 
-        // Cada vez que se abre el ComboBox, refresca los eventos
+        // Refrescar eventos al abrir los ComboBox
         cmbEvento.setOnShowing(event ->
                 ventaController.cargarEventos(cmbEvento)
         );
 
         cmbEventoResumen.setOnShowing(event ->
                 reporteController.cargarEventos(cmbEventoResumen)
+        );
+
+        // Al abrir cualquiera de las tres secciones,
+        // se limpia la pantalla que esté abierta a la derecha.
+
+        paneAdministrar.expandedProperty().addListener(
+                (observable, valorAnterior, estaAbierto) -> {
+                    if (estaAbierto) {
+                        contenidoPane.getChildren().clear();
+                    }
+                }
+        );
+
+        paneVenta.expandedProperty().addListener(
+                (observable, valorAnterior, estaAbierto) -> {
+                    if (estaAbierto) {
+                        contenidoPane.getChildren().clear();
+                    }
+                }
+        );
+
+        paneResumen.expandedProperty().addListener(
+                (observable, valorAnterior, estaAbierto) -> {
+                    if (estaAbierto) {
+                        contenidoPane.getChildren().clear();
+                    }
+                }
         );
     }
 

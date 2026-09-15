@@ -17,6 +17,7 @@ public class MainGUI extends Application {
         Scene scene = new Scene(loader.load());
 
         stage.setTitle("Gestión de Eventos y Shows");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
