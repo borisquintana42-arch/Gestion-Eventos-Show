@@ -5,7 +5,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import model.Evento;
-import service.EventoServicio;
+import service.EventoService;
 import service.ReporteService;
 
 /**
@@ -20,7 +20,7 @@ public class ReporteController {
     private final ReporteService reporteService =
             new ReporteService(VentaController.getVentaService());
 
-    private static final EventoServicio eventoServicio = EventoServicio.getInstance();
+    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
 
     private Pane contenedor;
 
@@ -55,7 +55,7 @@ public class ReporteController {
      * Carga los eventos actuales en el ComboBox del resumen.
      */
     public void cargarEventos(ComboBox<Evento> cmbEventoResumen) {
-        cmbEventoResumen.getItems().setAll(eventoServicio.obtenerEventos());
+        cmbEventoResumen.getItems().setAll(EVENTO_SERVICE.obtenerEventos());
     }
 
     /**

@@ -9,7 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import model.Evento;
-import service.EventoServicio;
+import service.EventoService;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.time.LocalTime;
 
 public class EventoController {
 
-    private static final EventoServicio eventoServicio = EventoServicio.getInstance();
+    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
 
     @FXML
     private TextField txtNombre;
@@ -47,7 +47,7 @@ public class EventoController {
                     capacidad
             );
 
-            eventoServicio.crearEvento(evento);
+            EVENTO_SERVICE.crearEvento(evento);
 
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
             alerta.setTitle("Evento creado");
@@ -153,7 +153,7 @@ public class EventoController {
 
             int id = Integer.parseInt(txtIdEditar.getText());
 
-            Evento evento = eventoServicio.buscarEvento(id);
+            Evento evento = EVENTO_SERVICE.buscarEvento(id);
 
             if (evento == null) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -215,7 +215,7 @@ public class EventoController {
 
             int id = Integer.parseInt(txtIdEliminar.getText());
 
-            Evento evento = eventoServicio.buscarEvento(id);
+            Evento evento = EVENTO_SERVICE.buscarEvento(id);
 
             if (evento == null) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -280,7 +280,7 @@ public class EventoController {
                 return;
             }
 
-            boolean eliminado = eventoServicio.eliminarEvento(
+            boolean eliminado = EVENTO_SERVICE.eliminarEvento(
                     eventoEnEdicion.getId()
             );
 
@@ -353,7 +353,7 @@ public class EventoController {
             LocalTime hora = LocalTime.parse(txtHoraEditar.getText());
             int capacidad = Integer.parseInt(txtCapacidadEditar.getText());
 
-            boolean actualizado = eventoServicio.actualizarEvento(
+            boolean actualizado = EVENTO_SERVICE.actualizarEvento(
                     eventoEnEdicion.getId(),
                     nombre,
                     dpFechaEditar.getValue(),
@@ -412,7 +412,7 @@ public class EventoController {
 
             tablaEventos.setItems(
                     FXCollections.observableArrayList(
-                            eventoServicio.obtenerEventos()
+                            EVENTO_SERVICE.obtenerEventos()
                     )
             );
         }
@@ -449,12 +449,12 @@ public class EventoController {
 
         tablaEventos.setItems(
                 FXCollections.observableArrayList(
-                        eventoServicio.obtenerEventos()
+                        EVENTO_SERVICE.obtenerEventos()
                 )
         );
 
         System.out.println(
-                "Eventos encontrados: " + eventoServicio.obtenerEventos().size()
+                "Eventos encontrados: " + EVENTO_SERVICE.obtenerEventos().size()
         );
     }
 

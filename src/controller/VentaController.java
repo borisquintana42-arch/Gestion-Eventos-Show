@@ -13,7 +13,7 @@ import model.BoletoMeetGreet;
 import model.BoletoVIP;
 import model.Evento;
 import model.Venta;
-import service.EventoServicio;
+import service.EventoService;
 import service.VentaService;
 
 /**
@@ -28,7 +28,7 @@ public class VentaController {
     private static final VentaService ventaService = new VentaService();
 
     // Misma instancia que usan las pantallas de eventos.
-    private static final EventoServicio eventoServicio = EventoServicio.getInstance();
+    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
 
     // Estado de la compra en curso (VentaDetalle.fxml).
     private Evento eventoSeleccionado;
@@ -74,7 +74,7 @@ public class VentaController {
      * la misma lista compartida de eventos.
      */
     public void cargarEventos(ComboBox<Evento> cmbEvento) {
-        cmbEvento.getItems().setAll(eventoServicio.obtenerEventos());
+        cmbEvento.getItems().setAll(EVENTO_SERVICE.obtenerEventos());
     }
 
     /**

@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class EventoServicio {
+public class EventoService {
 
-    private static final EventoServicio INSTANCIA = new EventoServicio();
+    private static final EventoService INSTANCIA = new EventoService();
 
     private final ArrayList<Evento> eventos;
 
@@ -19,14 +19,14 @@ public class EventoServicio {
      *
      * @return la instancia única de EventoServicio
      */
-    public static EventoServicio getInstance() {
+    public static EventoService getInstance() {
         return INSTANCIA;
     }
 
     /**
      * Inicializa el servicio de eventos con una lista vacia.
      */
-    public EventoServicio() {
+    public EventoService() {
         eventos = new ArrayList<>();
     }
 

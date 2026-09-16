@@ -1,10 +1,12 @@
+package prueba;
+
 import model.*;
 import service.VentaService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Main {
+public class PruebaVenta {
     public static void main(String[] args) {
         // 1. Instanciamos el servicio de ventas
         VentaService ventaService = new VentaService();

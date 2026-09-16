@@ -2,12 +2,12 @@ package prueba;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import service.EventoServicio;
+import service.EventoService;
 import model.Evento;
 
 public class PruebaEventos {
     public static void main(String[] args) {
-        EventoServicio servicio = new EventoServicio();
+        EventoService servicio = new EventoService();
 
         Evento evento = new Evento(
                 "Evento Boris",

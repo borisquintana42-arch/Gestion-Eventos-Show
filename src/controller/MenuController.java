@@ -10,7 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import model.Boleto;
 import model.Evento;
-import service.EventoServicio;
+import service.EventoService;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public class MenuController {
     private final ReporteController reporteController = new ReporteController();
 
     // Misma instancia compartida que usan las pantallas de EventoController.
-    private static final EventoServicio eventoServicio = EventoServicio.getInstance();
+    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
 
     @FXML
     private StackPane contenidoPane;
