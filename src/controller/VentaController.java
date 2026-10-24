@@ -13,6 +13,7 @@ import model.BoletoMeetGreet;
 import model.BoletoVIP;
 import model.Evento;
 import model.Venta;
+import repository.impl.VentaRepositoryImpl;
 import service.EventoService;
 import service.VentaService;
 
@@ -23,12 +24,23 @@ import service.VentaService;
  */
 public class VentaController {
 
-    // Servicio compartido con ReporteController para que el resumen
+    // Repositorio compartido con ReporteController para que el resumen
     // vea exactamente las mismas ventas realizadas.
-    private static final VentaService ventaService = new VentaService();
+    private static final VentaRepositoryImpl VENTA_REPOSITORY = new VentaRepositoryImpl();
+
+    // Servicio de ventas que usa el repositorio compartido.
+    private static final VentaService ventaService = new VentaService(VENTA_REPOSITORY, new EventoService());
 
     // Misma instancia que usan las pantallas de eventos.
-    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
+    private static final EventoService EVENTO_SERVICE = new EventoService();
+
+    /**
+     * Devuelve el repositorio de ventas para que ReporteController
+     * use exactamente la misma fuente de datos.
+     */
+    public static VentaRepositoryImpl getVentaRepository() {
+        return VENTA_REPOSITORY;
+    }
 
     // Estado de la compra en curso (VentaDetalle.fxml).
     private Evento eventoSeleccionado;
@@ -54,6 +66,10 @@ public class VentaController {
      * Devuelve la instancia única de VentaService de la aplicación,
      * para que el reporte use exactamente las mismas ventas.
      */
+    /**
+     * Devuelve la instancia única de VentaService de la aplicación,
+     * para que el reporte use exactamente las mismas ventas.
+     */
     public static VentaService getVentaService() {
         return ventaService;
     }
@@ -74,7 +90,14 @@ public class VentaController {
      * la misma lista compartida de eventos.
      */
     public void cargarEventos(ComboBox<Evento> cmbEvento) {
-        cmbEvento.getItems().setAll(EVENTO_SERVICE.obtenerEventos());
+        try {
+            cmbEvento.getItems().setAll(EVENTO_SERVICE.obtenerEventos());
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al cargar eventos: " + e.getMessage());
+            alerta.showAndWait();
+        }
     }
 
     /**
@@ -99,8 +122,15 @@ public class VentaController {
         );
         LblPrecio.setText("$ " + boleto.getPrecio());
 
-        int aforoDisponible = evento.getCapacidadMaxima()
-                - ventaService.calcularEntradasVendidas(evento);
+        int aforoDisponible = evento.getCapacidadMaxima();
+        try {
+            aforoDisponible -= ventaService.entradasVendidas(evento.getId());
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al calcular aforo: " + e.getMessage());
+            alerta.showAndWait();
+        }
         LblAforo.setText(String.valueOf(aforoDisponible));
 
         LblTotal.setText("$ 0.0");
@@ -147,6 +177,8 @@ public class VentaController {
         } catch (IllegalArgumentException e) {
 
             mostrarError(e.getMessage());
+        } catch (Exception e) {
+            mostrarError("Error inesperado: " + e.getMessage());
         }
     }
 
