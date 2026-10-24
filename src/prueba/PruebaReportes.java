@@ -5,6 +5,9 @@ import model.BoletoGeneral;
 import model.BoletoMeetGreet;
 import model.BoletoVIP;
 import model.Evento;
+import repository.impl.EventoRepositoryImpl;
+import repository.impl.VentaRepositoryImpl;
+import service.EventoService;
 import service.ReporteService;
 import service.VentaService;
 
@@ -13,13 +16,17 @@ import java.time.LocalTime;
 
 public class PruebaReportes {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
+        // Repositorios compartidos (misma instancia para servicio y reporte)
+        VentaRepositoryImpl ventaRepository = new VentaRepositoryImpl();
+        EventoRepositoryImpl eventoRepository = new EventoRepositoryImpl();
 
         // Servicio que registra las ventas
-        VentaService ventaService = new VentaService();
+        VentaService ventaService = new VentaService(ventaRepository, new EventoService(eventoRepository));
 
-        // El reporte usa exactamente el mismo servicio de ventas
-        ReporteService reporteService = new ReporteService(ventaService);
+        // El reporte usa exactamente el mismo repositorio de ventas
+        ReporteService reporteService = new ReporteService(ventaRepository);
 
         // Evento de prueba
         Evento evento = new Evento(

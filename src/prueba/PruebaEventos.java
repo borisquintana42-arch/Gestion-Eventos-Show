@@ -5,8 +5,10 @@ import java.time.LocalTime;
 import service.EventoService;
 import model.Evento;
 
+import java.util.Optional;
+
 public class PruebaEventos {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         EventoService servicio = new EventoService();
 
         Evento evento = new Evento(
@@ -26,23 +28,26 @@ public class PruebaEventos {
         servicio.crearEvento(evento);
         servicio.crearEvento(evento2);
 
-        Evento eventoActualizado = servicio.buscarEvento(1);
-        System.out.println("ID: " + eventoActualizado.getId());
-        System.out.println("Nombre: " + eventoActualizado.getNombre());
-        System.out.println("Fecha: " + eventoActualizado.getFecha());
-        System.out.println("Hora: " + eventoActualizado.getHora());
-        System.out.println("Capacidad: " + eventoActualizado.getCapacidadMaxima());
-
-
+        Optional<Evento> optActualizado = servicio.buscarEvento(1);
+        if (optActualizado.isPresent()) {
+            Evento eventoActualizado = optActualizado.get();
+            System.out.println("ID: " + eventoActualizado.getId());
+            System.out.println("Nombre: " + eventoActualizado.getNombre());
+            System.out.println("Fecha: " + eventoActualizado.getFecha());
+            System.out.println("Hora: " + eventoActualizado.getHora());
+            System.out.println("Capacidad: " + eventoActualizado.getCapacidadMaxima());
+        } else {
+            System.out.println("No se encontró el evento con id 1");
+        }
 
         for (Evento e : servicio.obtenerEventos()) {
             System.out.println(e);
         }
 
-        Evento encontrado = servicio.buscarEvento(99);
+        Optional<Evento> optEncontrado = servicio.buscarEvento(99);
 
-        if (encontrado != null) {
-            System.out.println("Evento encontrado: " + encontrado.getNombre());
+        if (optEncontrado.isPresent()) {
+            System.out.println("Evento encontrado: " + optEncontrado.get().getNombre());
         } else {
             System.out.println("Evento no encontrado");
         }
@@ -55,30 +60,22 @@ public class PruebaEventos {
                 499
         );
 
-
         if (actualizado) {
-            Evento eventoConsultado  = servicio.buscarEvento(1);
-
-            System.out.println("Nuevo nombre: " + eventoConsultado.getNombre());
+            Optional<Evento> optConsultado = servicio.buscarEvento(1);
+            if (optConsultado.isPresent()) {
+                System.out.println("Nuevo nombre: " + optConsultado.get().getNombre());
+            }
         } else {
             System.out.println("No se pudo actualizar");
         }
-
-        System.out.println(eventoActualizado);
-        System.out.println("ID: " + eventoActualizado.getId());
-        System.out.println("Nombre: " + eventoActualizado.getNombre());
-        System.out.println("Fecha: " + eventoActualizado.getFecha());
-        System.out.println("Hora: " + eventoActualizado.getHora());
-        System.out.println("Capacidad: " + eventoActualizado.getCapacidadMaxima());
 
         boolean eliminado = servicio.eliminarEvento(2);
 
         if (eliminado) {
             System.out.println("Evento eliminado correctamente");
 
-            Evento comprobacion = servicio.buscarEvento(2);
-
-            if (comprobacion == null) {
+            Optional<Evento> optComprobacion = servicio.buscarEvento(2);
+            if (optComprobacion.isEmpty()) {
                 System.out.println("Confirmado: el evento ya no existe");
             }
 
@@ -89,7 +86,5 @@ public class PruebaEventos {
         for (Evento e : servicio.obtenerEventos()) {
             System.out.println(e);
         }
-
-
     }
 }
