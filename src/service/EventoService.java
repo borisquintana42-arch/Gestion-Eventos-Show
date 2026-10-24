@@ -1,124 +1,111 @@
 package service;
 
 import model.Evento;
+import repository.EventoRepository;
+import repository.impl.EventoRepositoryImpl;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+/**
+ * Servicio de eventos con persistencia JDBC.
+ * Delegar el almacenamiento en EventoRepository en lugar de una lista en memoria.
+ * Todas las operaciones lanzan Exception para que el controller decida cómo mostrar el error.
+ */
 public class EventoService {
 
-    private static final EventoService INSTANCIA = new EventoService();
+    private final EventoRepository repository;
 
-    private final ArrayList<Evento> eventos;
-
-    /**
-     * Devuelve la instancia compartida de EventoServicio usada por todas las
-     * pantallas de la aplicación, para que todas trabajen sobre la misma lista
-     * de eventos durante una ejecución.
-     *
-     * @return la instancia única de EventoServicio
-     */
-    public static EventoService getInstance() {
-        return INSTANCIA;
-    }
-
-    /**
-     * Inicializa el servicio de eventos con una lista vacia.
-     */
     public EventoService() {
-        eventos = new ArrayList<>();
+        this.repository = new EventoRepositoryImpl();
+    }
+
+    // Constructor para pruebas o inyección de dependencias (opcional)
+    public EventoService(EventoRepository repository) {
+        this.repository = repository;
     }
 
     /**
-     * Agrega un nuevo evento a la lista de eventos.
+     * Crea un nuevo evento en la base de datos.
      *
      * @param evento evento que se desea registrar
+     * @throws Exception si ocurre un error de persistencia o validación
      */
-
-    public void crearEvento(Evento evento) {
-
+    public void crearEvento(Evento evento) throws Exception {
         if (evento == null) {
-            throw new IllegalArgumentException("Favor rellene el espacio con su evento");
+            throw new IllegalArgumentException("El evento no puede ser nulo.");
         }
-
-        eventos.add(evento);
+        repository.crear(evento);
     }
 
     /**
-     * Obtiene todos los eventos registrados.
+     * Obtiene todos los eventos registrados en la base de datos.
      *
-     * @return una copia de la lista de eventos
+     * @return lista de eventos
+     * @throws Exception si ocurre un error de consulta
      */
-
-    public ArrayList<Evento> obtenerEventos() {
-        return new ArrayList<>(eventos);
+    public List<Evento> obtenerEventos() throws Exception {
+        return repository.obtenerTodos();
     }
 
     /**
-     * Busca un evento utilizando su identificador.
+     * Busca un evento por su identificador.
      *
-     * @param id identificador del evento que se desea buscar
-     * @return el evento encontrado o null si no existe
+     * @param id identificador del evento
+     * @return Optional con el evento si existe, vacío si no
+     * @throws Exception si ocurre un error de consulta
      */
-
-    public Evento buscarEvento(int id) {
-        for (Evento evento : eventos) {
-            if (evento.getId() == id) {
-                return evento;
-            }
-        }
-
-        return null;
+    public Optional<Evento> buscarEvento(int id) throws Exception {
+        return repository.buscarPorId(id);
     }
 
     /**
      * Actualiza los datos de un evento existente.
      *
-     * @param id identificador del evento
-     * @param nombre nuevo nombre del evento
-     * @param fecha nueva fecha del evento
-     * @param hora nueva hora del evento
-     * @param capacidadMaxima nueva capacidad maxima
-     * @return true si el evento fue actualizado, false si no fue encontrado
+     * @param id             identificador del evento
+     * @param nombre         nuevo nombre
+     * @param fecha          nueva fecha
+     * @param hora           nueva hora
+     * @param capacidadMaxima nueva capacidad máxima
+     * @return true si se actualizó, false si no se encontró
+     * @throws Exception si ocurre un error de persistencia
      */
+    public boolean actualizarEvento(int id, String nombre, java.time.LocalDate fecha,
+                                    java.time.LocalTime hora, int capacidadMaxima) throws Exception {
 
-    public boolean actualizarEvento(int id, String nombre, LocalDate fecha,
-                                    LocalTime hora, int capacidadMaxima) {
-
-        Evento evento = buscarEvento(id);
-
-        if (evento != null) {
-
-            evento.setNombre(nombre);
-            evento.setFecha(fecha);
-            evento.setHora(hora);
-            evento.setCapacidadMaxima(capacidadMaxima);
-
-            return true;
+        Optional<Evento> opt = repository.buscarPorId(id);
+        if (opt.isEmpty()) {
+            return false;
         }
 
-        return false;
+        Evento e = opt.get();
+        e.setNombre(nombre);
+        e.setFecha(fecha);
+        e.setHora(hora);
+        e.setCapacidadMaxima(capacidadMaxima);
+
+        return repository.actualizar(e);
     }
 
     /**
-     * Elimina un evento utilizando su identificador.
+     * Elimina un evento por su identificador.
      *
-     * @param id identificador del evento que se desea eliminar
-     * @return true si el evento fue eliminado, false si no fue encontrado
+     * @param id identificador del evento
+     * @return true si se eliminó, false si no existía
+     * @throws Exception si ocurre un error de persistencia
      */
+    public boolean eliminarEvento(int id) throws Exception {
+        return repository.eliminar(id);
+    }
 
-    public boolean eliminarEvento(int id) {
-
-        Evento evento = buscarEvento(id);
-
-        if (evento != null) {
-
-            eventos.remove(evento);
-
-            return true;
-        }
-
-        return false;
+    /**
+     * Retorna la cantidad de entradas vendidas para un evento (desde la BD).
+     *
+     * @param eventoId identificador del evento
+     * @return cantidad de entradas vendidas
+     * @throws Exception si ocurre un error de consulta
+     */
+    public int entradasVendidas(int eventoId) throws Exception {
+        return repository.contarEntradasVendidas(eventoId);
     }
 }
