@@ -3,18 +3,21 @@ package model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Evento {
+public class Evento implements Id {
 
     private static int contadorId = 1;
 
-    private final int id;
+    private int id;
     private String nombre;
     private LocalDate fecha;
     private LocalTime hora;
     private int capacidadMaxima;
-    private int entradasVendidas;
 
     public Evento(String nombre, LocalDate fecha, LocalTime hora, int capacidadMaxima) {
+        this(contadorId++, nombre, fecha, hora, capacidadMaxima);
+    }
+
+    public Evento(int id, String nombre, LocalDate fecha, LocalTime hora, int capacidadMaxima) {
 
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacio.");
@@ -32,15 +35,19 @@ public class Evento {
             throw new IllegalArgumentException("La capacidad debe ser mayor que cero.");
         }
 
-        this.id = contadorId++;
+        this.id = id;
         this.nombre = nombre;
         this.fecha = fecha;
         this.hora = hora;
         this.capacidadMaxima = capacidadMaxima;
-        this.entradasVendidas = 0;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 
+    @Override
     public int getId() {
         return id;
     }
@@ -50,6 +57,10 @@ public class Evento {
     }
 
     public void setNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacio.");
+        }
+
         this.nombre = nombre;
     }
 
@@ -58,6 +69,10 @@ public class Evento {
     }
 
     public void setFecha(LocalDate fecha) {
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha no puede estar vacia.");
+        }
+
         this.fecha = fecha;
     }
 
@@ -66,6 +81,10 @@ public class Evento {
     }
 
     public void setHora(LocalTime hora) {
+        if (hora == null) {
+            throw new IllegalArgumentException("La hora no puede estar vacia.");
+        }
+
         this.hora = hora;
     }
 
@@ -75,38 +94,15 @@ public class Evento {
 
     public void setCapacidadMaxima(int capacidadMaxima) {
 
-        if (capacidadMaxima < entradasVendidas) {
+        if (capacidadMaxima <= 0) {
             throw new IllegalArgumentException(
-                    "La capacidad no puede ser menor que las entradas ya vendidas."
+                    "La capacidad debe ser mayor que cero."
             );
         }
 
         this.capacidadMaxima = capacidadMaxima;
     }
 
-    public int getEntradasVendidas() {
-        return entradasVendidas;
-    }
-
-    public int getEntradasDisponibles() {
-        return capacidadMaxima - entradasVendidas;
-    }
-
-    public boolean hayAforo(int cantidad) {
-        return cantidad > 0 && cantidad <= getEntradasDisponibles();
-    }
-
-    public void registrarVenta(int cantidad) {
-
-        if (!hayAforo(cantidad)) {
-            throw new IllegalArgumentException(
-                    "No hay suficiente aforo disponible."
-            );
-        }
-
-        entradasVendidas += cantidad;
-    }
-    
     @Override
     public String toString() {
         return nombre;
