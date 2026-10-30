@@ -11,6 +11,8 @@ import javafx.scene.layout.Pane;
 import model.Evento;
 import service.EventoService;
 import javafx.scene.control.TextField;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -19,6 +21,11 @@ import java.time.LocalTime;
 public class EventoController {
 
     private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
+
+    private final ObservableList<Evento> listaEventos =
+            FXCollections.observableArrayList();
+
+    private FilteredList<Evento> eventosFiltrados;
 
     @FXML
     private TextField txtNombre;
@@ -395,30 +402,41 @@ public class EventoController {
         if (tablaEventos != null) {
 
             colId.setCellValueFactory(
-                    new PropertyValueFactory<>("id")
-            );
+                    new PropertyValueFactory<>("id"));
 
             colNombre.setCellValueFactory(
-                    new PropertyValueFactory<>("nombre")
-            );
+                    new PropertyValueFactory<>("nombre"));
 
             colFecha.setCellValueFactory(
-                    new PropertyValueFactory<>("fecha")
-            );
+                    new PropertyValueFactory<>("fecha"));
 
             colHora.setCellValueFactory(
-                    new PropertyValueFactory<>("hora")
-            );
+                    new PropertyValueFactory<>("hora"));
 
             colCapacidad.setCellValueFactory(
-                    new PropertyValueFactory<>("capacidadMaxima")
-            );
+                    new PropertyValueFactory<>("capacidadMaxima"));
 
-            tablaEventos.setItems(
-                    FXCollections.observableArrayList(
-                            EVENTO_SERVICE.obtenerEventos()
-                    )
-            );
+            // Lista que permite filtrar sin eliminar eventos
+            eventosFiltrados = new FilteredList<>(listaEventos, e -> true);
+
+            tablaEventos.setItems(eventosFiltrados);
+
+            if (txtBuscarEvento != null) {
+
+                txtBuscarEvento.textProperty().addListener(
+                        (obs, anterior, nuevo) -> {
+
+                            String busqueda = nuevo == null
+                                    ? ""
+                                    : nuevo.trim().toLowerCase();
+
+                            eventosFiltrados.setPredicate(evento ->
+                                    busqueda.isEmpty()
+                                            || evento.getNombre().toLowerCase()
+                                            .contains(busqueda)
+                            );
+                        });
+            }
         }
     }
 
@@ -431,35 +449,22 @@ public class EventoController {
 
     public void cargarEventos() {
 
-        colId.setCellValueFactory(
-                new PropertyValueFactory<>("id")
-        );
+        if (tablaEventos == null) {
+            return;
+        }
 
-        colNombre.setCellValueFactory(
-                new PropertyValueFactory<>("nombre")
-        );
+        try {
+            listaEventos.setAll(EVENTO_SERVICE.obtenerEventos());
 
-        colFecha.setCellValueFactory(
-                new PropertyValueFactory<>("fecha")
-        );
+        } catch (Exception e) {
 
-        colHora.setCellValueFactory(
-                new PropertyValueFactory<>("hora")
-        );
-
-        colCapacidad.setCellValueFactory(
-                new PropertyValueFactory<>("capacidadMaxima")
-        );
-
-        tablaEventos.setItems(
-                FXCollections.observableArrayList(
-                        EVENTO_SERVICE.obtenerEventos()
-                )
-        );
-
-        System.out.println(
-                "Eventos encontrados: " + EVENTO_SERVICE.obtenerEventos().size()
-        );
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText(
+                    "Error al cargar eventos: " + e.getMessage()
+            );
+            alerta.showAndWait();
+        }
     }
 
 }
