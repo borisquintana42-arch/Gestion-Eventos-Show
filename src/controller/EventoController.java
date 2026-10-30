@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import model.Evento;
 import service.EventoService;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -146,6 +147,9 @@ public class EventoController {
     public void setContenedor(Pane contenedor) {
         this.contenedor = contenedor;
     }
+
+    @FXML
+    private TextField txtBuscarEvento;
 
     @FXML
     private void buscarParaEditar() {
