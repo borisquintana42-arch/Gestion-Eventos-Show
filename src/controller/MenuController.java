@@ -299,4 +299,24 @@ public class MenuController {
         error.setContentText(mensaje);
         error.showAndWait();
     }
+
+    @FXML
+    private void abrirHistorialVentas() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/HistorialVentas.fxml")
+            );
+
+            Parent vista = loader.load();
+
+            HistorialVentasController controller = loader.getController();
+            controller.setContenedor(contenidoPane);
+
+            contenidoPane.getChildren().setAll(vista);
+
+        } catch (IOException e) {
+            mostrarError("No se pudo abrir el historial: " + e.getMessage());
+        }
+    }
+
 }
