@@ -13,7 +13,7 @@ public final class DatabaseConnection {
 
     private static final String URL = "jdbc:mysql://localhost:3306/gestion_eventos_show?useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";        // Cambiar según su entorno
-    private static final String PASSWORD = "root";        // Cambiar según su entorno
+    private static final String PASSWORD = System.getenv("DB_PASSWORD");        // Cambiar según su entorno
 
     private DatabaseConnection() {
         // Utilidad: no se instancia

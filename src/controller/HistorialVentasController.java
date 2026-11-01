@@ -9,6 +9,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.layout.Pane;
 import model.Venta;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
+import java.util.List;
 
 public class HistorialVentasController {
 
@@ -71,20 +73,39 @@ public class HistorialVentasController {
 
     @FXML
     private void actualizarHistorial() {
-        try {
-            // Obtiene las ventas desde el servicio de César
-            tablaVentas.setItems(
-                    FXCollections.observableArrayList(
-                            VentaController.getVentaService().obtenerHistorialVentas()
-                    )
-            );
 
-        } catch (Exception e) {
+        // Ejecuta la consulta a MySQL en segundo plano
+        Task<List<Venta>> tarea = new Task<>() {
+
+            @Override
+            protected List<Venta> call() throws Exception {
+                return VentaController.getVentaService()
+                        .obtenerHistorialVentas();
+            }
+        };
+
+        // Cuando termina, actualiza la tabla
+        tarea.setOnSucceeded(evento -> {
+            tablaVentas.setItems(
+                    FXCollections.observableArrayList(tarea.getValue())
+            );
+        });
+
+        // Si ocurre un error, lo muestra
+        tarea.setOnFailed(evento -> {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setHeaderText(null);
-            alerta.setContentText("Error al cargar ventas: " + e.getMessage());
+            alerta.setContentText(
+                    "Error al cargar ventas: "
+                            + tarea.getException().getMessage()
+            );
             alerta.showAndWait();
-        }
+        });
+
+        // Inicia el Task en otro hilo
+        Thread hilo = new Thread(tarea);
+        hilo.setDaemon(true);
+        hilo.start();
     }
 
 }
