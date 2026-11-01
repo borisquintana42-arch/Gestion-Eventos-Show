@@ -412,54 +412,29 @@ public class EventoController {
 
         if (tablaEventos != null) {
 
-            colId.setCellValueFactory(
-                    new PropertyValueFactory<>("id"));
+            colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+            colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+            colHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
+            colCapacidad.setCellValueFactory(new PropertyValueFactory<>("capacidadMaxima"));
 
-            colNombre.setCellValueFactory(
-                    new PropertyValueFactory<>("nombre"));
-
-            colFecha.setCellValueFactory(
-                    new PropertyValueFactory<>("fecha"));
-
-            colHora.setCellValueFactory(
-                    new PropertyValueFactory<>("hora"));
-
-            colCapacidad.setCellValueFactory(
-                    new PropertyValueFactory<>("capacidadMaxima"));
-
-            // Lista que permite filtrar sin eliminar eventos
+            // Permite buscar eventos por nombre
             eventosFiltrados = new FilteredList<>(listaEventos, e -> true);
-
             tablaEventos.setItems(eventosFiltrados);
 
             if (txtBuscarEvento != null) {
+                txtBuscarEvento.textProperty().addListener((obs, anterior, nuevo) -> {
+                    String busqueda = nuevo == null ? "" : nuevo.trim().toLowerCase();
 
-                txtBuscarEvento.textProperty().addListener(
-                        (obs, anterior, nuevo) -> {
-
-                            String busqueda = nuevo == null
-                                    ? ""
-                                    : nuevo.trim().toLowerCase();
-
-                            eventosFiltrados.setPredicate(evento ->
-                                    busqueda.isEmpty()
-                                            || evento.getNombre().toLowerCase()
-                                            .contains(busqueda)
-                            );
-                        });
+                    eventosFiltrados.setPredicate(evento ->
+                            busqueda.isEmpty() ||
+                                    evento.getNombre().toLowerCase().contains(busqueda)
+                    );
+                });
             }
-            try {
-                tablaEventos.setItems(
-                        FXCollections.observableArrayList(
-                                EVENTO_SERVICE.obtenerEventos()
-                        )
-                );
-            } catch (Exception e) {
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setHeaderText(null);
-                alerta.setContentText("Error al cargar eventos: " + e.getMessage());
-                alerta.showAndWait();
-            }
+
+            // Carga los eventos al abrir la pantalla
+            cargarEventos();
         }
     }
 
@@ -477,37 +452,14 @@ public class EventoController {
         }
 
         try {
+            // Obtiene los eventos desde el servicio JDBC
             listaEventos.setAll(EVENTO_SERVICE.obtenerEventos());
 
         } catch (Exception e) {
-
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setHeaderText(null);
-            alerta.setContentText(
-                    "Error al cargar eventos: " + e.getMessage()
-            );
+            alerta.setContentText("Error al cargar eventos: " + e.getMessage());
             alerta.showAndWait();
-        }
-        colHora.setCellValueFactory(
-                new PropertyValueFactory<>("hora")
-        );
-
-        colCapacidad.setCellValueFactory(
-                new PropertyValueFactory<>("capacidadMaxima")
-        );
-
-        try {
-            tablaEventos.setItems(
-                    FXCollections.observableArrayList(
-                            EVENTO_SERVICE.obtenerEventos()
-                    )
-            );
-
-            System.out.println(
-                    "Eventos encontrados: " + EVENTO_SERVICE.obtenerEventos().size()
-            );
-        } catch (Exception e) {
-            System.out.println("Error al cargar eventos: " + e.getMessage());
         }
     }
 
