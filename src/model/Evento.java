@@ -7,13 +7,17 @@ public class Evento implements Id {
 
     private static int contadorId = 1;
 
-    private final int id;
+    private int id;
     private String nombre;
     private LocalDate fecha;
     private LocalTime hora;
     private int capacidadMaxima;
 
     public Evento(String nombre, LocalDate fecha, LocalTime hora, int capacidadMaxima) {
+        this(contadorId++, nombre, fecha, hora, capacidadMaxima);
+    }
+
+    public Evento(int id, String nombre, LocalDate fecha, LocalTime hora, int capacidadMaxima) {
 
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre no puede estar vacio.");
@@ -31,11 +35,15 @@ public class Evento implements Id {
             throw new IllegalArgumentException("La capacidad debe ser mayor que cero.");
         }
 
-        this.id = contadorId++;
+        this.id = id;
         this.nombre = nombre;
         this.fecha = fecha;
         this.hora = hora;
         this.capacidadMaxima = capacidadMaxima;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 

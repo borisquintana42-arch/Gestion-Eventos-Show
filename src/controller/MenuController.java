@@ -20,7 +20,7 @@ public class MenuController {
     private final ReporteController reporteController = new ReporteController();
 
     // Misma instancia compartida que usan las pantallas de EventoController.
-    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
+    private static final EventoService EVENTO_SERVICE = new EventoService();
 
     @FXML
     private StackPane contenidoPane;
@@ -52,8 +52,12 @@ public class MenuController {
         ventaController.cargarTiposBoleto(cmbBoleto);
 
         // Carga inicial
-        ventaController.cargarEventos(cmbEvento);
-        reporteController.cargarEventos(cmbEventoResumen);
+        try {
+            ventaController.cargarEventos(cmbEvento);
+            reporteController.cargarEventos(cmbEventoResumen);
+        } catch (Exception e) {
+            mostrarError("Error al cargar eventos: " + e.getMessage());
+        }
 
         // Refrescar eventos al abrir los ComboBox
         cmbEvento.setOnShowing(event ->

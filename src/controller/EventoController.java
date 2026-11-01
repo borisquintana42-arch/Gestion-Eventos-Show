@@ -17,10 +17,11 @@ import javafx.collections.transformation.FilteredList;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 public class EventoController {
 
-    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
+    private final EventoService EVENTO_SERVICE = new EventoService();
 
     private final ObservableList<Evento> listaEventos =
             FXCollections.observableArrayList();
@@ -164,15 +165,15 @@ public class EventoController {
 
             int id = Integer.parseInt(txtIdEditar.getText());
 
-            Evento evento = EVENTO_SERVICE.buscarEvento(id);
-
-            if (evento == null) {
+            Optional<Evento> opt = EVENTO_SERVICE.buscarEvento(id);
+            if (opt.isEmpty()) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText(null);
                 alerta.setContentText("No existe un evento con ese ID.");
                 alerta.showAndWait();
                 return;
             }
+            Evento evento = opt.get();
 
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/EditarEventoDatos.fxml")
@@ -197,6 +198,11 @@ public class EventoController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al buscar evento: " + e.getMessage());
+            alerta.showAndWait();
         }
     }
 
@@ -226,15 +232,15 @@ public class EventoController {
 
             int id = Integer.parseInt(txtIdEliminar.getText());
 
-            Evento evento = EVENTO_SERVICE.buscarEvento(id);
-
-            if (evento == null) {
+            Optional<Evento> opt = EVENTO_SERVICE.buscarEvento(id);
+            if (opt.isEmpty()) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setHeaderText(null);
                 alerta.setContentText("No existe un evento con ese ID.");
                 alerta.showAndWait();
                 return;
             }
+            Evento evento = opt.get();
 
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/EliminarEventoDatos.fxml")
@@ -259,6 +265,11 @@ public class EventoController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al buscar evento: " + e.getMessage());
+            alerta.showAndWait();
         }
     }
 
@@ -437,6 +448,18 @@ public class EventoController {
                             );
                         });
             }
+            try {
+                tablaEventos.setItems(
+                        FXCollections.observableArrayList(
+                                EVENTO_SERVICE.obtenerEventos()
+                        )
+                );
+            } catch (Exception e) {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setHeaderText(null);
+                alerta.setContentText("Error al cargar eventos: " + e.getMessage());
+                alerta.showAndWait();
+            }
         }
     }
 
@@ -464,6 +487,27 @@ public class EventoController {
                     "Error al cargar eventos: " + e.getMessage()
             );
             alerta.showAndWait();
+        }
+        colHora.setCellValueFactory(
+                new PropertyValueFactory<>("hora")
+        );
+
+        colCapacidad.setCellValueFactory(
+                new PropertyValueFactory<>("capacidadMaxima")
+        );
+
+        try {
+            tablaEventos.setItems(
+                    FXCollections.observableArrayList(
+                            EVENTO_SERVICE.obtenerEventos()
+                    )
+            );
+
+            System.out.println(
+                    "Eventos encontrados: " + EVENTO_SERVICE.obtenerEventos().size()
+            );
+        } catch (Exception e) {
+            System.out.println("Error al cargar eventos: " + e.getMessage());
         }
     }
 

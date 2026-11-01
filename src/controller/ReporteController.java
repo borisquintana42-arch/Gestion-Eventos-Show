@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.Alert;
 import model.Evento;
+import repository.impl.VentaRepositoryImpl;
 import service.EventoService;
 import service.ReporteService;
 
@@ -16,11 +18,11 @@ import service.ReporteService;
  */
 public class ReporteController {
 
-    // Mismo VentaService que usa VentaController (instancia única compartida).
+    // Mismo repositorio de ventas que usa VentaController (instancia única compartida).
     private final ReporteService reporteService =
-            new ReporteService(VentaController.getVentaService());
+            new ReporteService(VentaController.getVentaRepository());
 
-    private static final EventoService EVENTO_SERVICE = EventoService.getInstance();
+    private final EventoService EVENTO_SERVICE = new EventoService();
 
     private Pane contenedor;
 
@@ -55,7 +57,14 @@ public class ReporteController {
      * Carga los eventos actuales en el ComboBox del resumen.
      */
     public void cargarEventos(ComboBox<Evento> cmbEventoResumen) {
-        cmbEventoResumen.getItems().setAll(EVENTO_SERVICE.obtenerEventos());
+        try {
+            cmbEventoResumen.getItems().setAll(EVENTO_SERVICE.obtenerEventos());
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al cargar eventos: " + e.getMessage());
+            alerta.showAndWait();
+        }
     }
 
     /**
@@ -66,28 +75,35 @@ public class ReporteController {
 
         this.contenedor = contenedor;
 
-        LblNombreEvento.setText(evento.getNombre());
-        LblFechaEvento.setText(String.valueOf(evento.getFecha()));
-        LblCapacidad.setText(String.valueOf(evento.getCapacidadMaxima()));
+        try {
+            LblNombreEvento.setText(evento.getNombre());
+            LblFechaEvento.setText(String.valueOf(evento.getFecha()));
+            LblCapacidad.setText(String.valueOf(evento.getCapacidadMaxima()));
 
-        LblGeneralVendido.setText(
-                String.valueOf(reporteService.contarBoletosGeneral(evento))
-        );
-        LblVipVendidos.setText(
-                String.valueOf(reporteService.contarBoletosVIP(evento))
-        );
-        LblMeetGreetVendidos.setText(
-                String.valueOf(reporteService.contarBoletosMeetGreet(evento))
-        );
-        LblTotalVendidos.setText(
-                String.valueOf(reporteService.calcularTotalVendidos(evento))
-        );
-        LblDisponible.setText(
-                String.valueOf(reporteService.calcularEntradasDisponibles(evento))
-        );
-        LblRecaudacion.setText(
-                "$ " + reporteService.calcularRecaudacionTotal(evento)
-        );
+            LblGeneralVendido.setText(
+                    String.valueOf(reporteService.contarBoletosGeneral(evento))
+            );
+            LblVipVendidos.setText(
+                    String.valueOf(reporteService.contarBoletosVIP(evento))
+            );
+            LblMeetGreetVendidos.setText(
+                    String.valueOf(reporteService.contarBoletosMeetGreet(evento))
+            );
+            LblTotalVendidos.setText(
+                    String.valueOf(reporteService.calcularTotalVendidos(evento))
+            );
+            LblDisponible.setText(
+                    String.valueOf(reporteService.calcularEntradasDisponibles(evento))
+            );
+            LblRecaudacion.setText(
+                    "$ " + reporteService.calcularRecaudacionTotal(evento)
+            );
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al cargar resumen: " + e.getMessage());
+            alerta.showAndWait();
+        }
     }
 
     @FXML

@@ -3,84 +3,90 @@ package service;
 import model.Boleto;
 import model.Evento;
 import model.Venta;
-import util.Repositorio;
+import repository.VentaRepository;
+import repository.impl.VentaRepositoryImpl;
 
 import java.util.List;
 
 /**
- * Servicio encargado de la lógica de negocio de la venta de boletos.
- * Lleva el historial de todas las ventas y controla el aforo de cada evento,
- * ya que la clase {@link Evento} solo conoce su capacidad máxima.
+ * Servicio de ventas con persistencia JDBC y control de aforo.
+ * Delegar el almacenamiento en VentaRepository en lugar de una lista en memoria.
  */
 public class VentaService {
 
-    private final Repositorio<Venta> repositorioVentas = new Repositorio<>();
+    private final VentaRepository repository;
+    private final EventoService eventoService;
 
-    /**
-     * Verifica si la cantidad solicitada, sumada a las entradas ya vendidas
-     * para el evento, no supera su capacidad máxima.
-     */
-    public boolean verificarAforo(Evento evento, int cantidadSolicitada) {
-        validarEntrada(evento, cantidadSolicitada);
+    public VentaService() {
+        this.repository = new VentaRepositoryImpl();
+        this.eventoService = new EventoService();
+    }
 
-        int entradasVendidas = calcularEntradasVendidas(evento);
-        return entradasVendidas + cantidadSolicitada <= evento.getCapacidadMaxima();
+    public VentaService(VentaRepository repository, EventoService eventoService) {
+        this.repository = repository;
+        this.eventoService = eventoService;
     }
 
     /**
-     * Registra la compra de boletos para un evento, previa validación de aforo.
+     * Registra una compra de boletos previo control de aforo.
      *
-     * @return la {@link Venta} creada y agregada al historial.
-     * @throws IllegalArgumentException si el aforo del evento no es suficiente.
+     * @param evento  evento al que se venden boletos
+     * @param boleto  tipo de boleto
+     * @param cantidad cantidad de boletos
+     * @return la venta registrada
+     * @throws Exception si faltan datos, no hay aforo o error de BD
      */
-    public Venta registrarCompra(Evento evento, Boleto boleto, int cantidad) {
-        validarEntrada(evento, cantidad);
+    /**
+     * Retorna la cantidad de entradas vendidas para un evento (desde la BD).
+     */
+    public int entradasVendidas(int eventoId) throws Exception {
+        return eventoService.entradasVendidas(eventoId);
+    }
 
+    public Venta registrarCompra(Evento evento, Boleto boleto, int cantidad) throws Exception {
+        if (evento == null) {
+            throw new IllegalArgumentException("El evento no puede ser nulo.");
+        }
         if (boleto == null) {
             throw new IllegalArgumentException("El boleto no puede ser nulo.");
         }
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+        }
 
-        int entradasVendidas = calcularEntradasVendidas(evento);
-        int aforoDisponible = evento.getCapacidadMaxima() - entradasVendidas;
-
-        if (!verificarAforo(evento, cantidad)) {
+        // Control de aforo usando datos persistidos en MySQL
+        int vendidas = eventoService.entradasVendidas(evento.getId());
+        int disponible = evento.getCapacidadMaxima() - vendidas;
+        if (cantidad > disponible) {
             throw new IllegalArgumentException(
-                    "No hay aforo suficiente para el evento \"" + evento.getNombre()
-                            + "\". Aforo disponible: " + aforoDisponible
-                            + " de " + evento.getCapacidadMaxima()
-                            + " entradas. Se solicitaron " + cantidad + "."
+                    "No hay aforo suficiente. Disponible: " + disponible
+                            + ", solicitado: " + cantidad
             );
         }
 
         Venta venta = new Venta(evento, boleto, cantidad);
-        repositorioVentas.agregar(venta);
+        repository.registrar(venta);
         return venta;
     }
 
     /**
-     * Suma las cantidades de boletos vendidos para un evento en particular,
-     * recorriendo todo el historial de ventas.
+     * Obtiene todas las ventas de un evento específico.
+     *
+     * @param evento evento consultado
+     * @return lista de ventas
+     * @throws Exception si ocurre un error de consulta
      */
-    public int calcularEntradasVendidas(Evento evento) {
-        return repositorioVentas.obtenerTodos().stream()
-                .filter(venta -> venta.getEvento() == evento)
-                .mapToInt(Venta::getCantidad)
-                .sum();
+    public List<Venta> obtenerVentasPorEvento(Evento evento) throws Exception {
+        return repository.obtenerPorEvento(evento.getId());
     }
 
     /**
-     * Retorna el historial de ventas de forma de solo lectura.
+     * Obtiene el historial completo de ventas.
+     *
+     * @return lista de todas las ventas
+     * @throws Exception si ocurre un error de consulta
      */
-    public List<Venta> getVentasRegistradas() {
-        return repositorioVentas.obtenerTodos();
-    }
-
-    private void validarEntrada(Evento evento, int cantidadSolicitada) {
-        if (evento == null) {
-            throw new IllegalArgumentException("El evento no puede ser nulo.");
-        }
-        if (cantidadSolicitada <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
-        }
+    public List<Venta> obtenerHistorialVentas() throws Exception {
+        return repository.obtenerHistorial();
     }
 }

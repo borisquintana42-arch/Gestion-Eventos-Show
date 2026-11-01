@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class PruebaVenta {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         // 1. Instanciamos el servicio de ventas
         VentaService ventaService = new VentaService();
 
@@ -38,13 +38,13 @@ public class PruebaVenta {
             Venta v3 = ventaService.registrarCompra(concierto, general, 2);
             System.out.println("✅ Venta realizada: " + v3);
 
-        } catch (IllegalArgumentException e) {
-            System.out.println("❌ ERROR ESPERADO (Control de aforo funciona): " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("❌ ERROR: " + e.getMessage());
         }
 
         // 4. Verificar resumen
         System.out.println("\n--- RESUMEN FINAL ---");
-        System.out.println("Entradas vendidas totales: " + ventaService.calcularEntradasVendidas(concierto));
-        System.out.println("Aforo restante: " + (concierto.getCapacidadMaxima() - ventaService.calcularEntradasVendidas(concierto)));
+        System.out.println("Entradas vendidas totales: " + ventaService.entradasVendidas(concierto.getId()));
+        System.out.println("Aforo restante: " + (concierto.getCapacidadMaxima() - ventaService.entradasVendidas(concierto.getId())));
     }
 }
