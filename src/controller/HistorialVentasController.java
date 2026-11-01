@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.control.Alert;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -70,12 +71,20 @@ public class HistorialVentasController {
 
     @FXML
     private void actualizarHistorial() {
+        try {
+            // Obtiene las ventas desde el servicio de César
+            tablaVentas.setItems(
+                    FXCollections.observableArrayList(
+                            VentaController.getVentaService().obtenerHistorialVentas()
+                    )
+            );
 
-        tablaVentas.setItems(
-                FXCollections.observableArrayList(
-                        VentaController.getVentaService().getVentasRegistradas()
-                )
-        );
+        } catch (Exception e) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al cargar ventas: " + e.getMessage());
+            alerta.showAndWait();
+        }
     }
 
 }
