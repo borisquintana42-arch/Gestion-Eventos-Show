@@ -7,17 +7,18 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import model.Boleto;
 import model.Evento;
 import service.EventoService;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class MenuController {
 
     private final VentaController ventaController = new VentaController();
-    private final ReporteController reporteController = new ReporteController();
 
     // Misma instancia compartida que usan las pantallas de EventoController.
     private static final EventoService EVENTO_SERVICE = new EventoService();
@@ -44,7 +45,7 @@ public class MenuController {
     private ComboBox<Boleto> cmbBoleto;
 
     @FXML
-    private ComboBox<Evento> cmbEventoResumen;
+    private TextField txtIdResumen;
 
     @FXML
     private void initialize() {
@@ -54,18 +55,13 @@ public class MenuController {
         // Carga inicial
         try {
             ventaController.cargarEventos(cmbEvento);
-            reporteController.cargarEventos(cmbEventoResumen);
         } catch (Exception e) {
             mostrarError("Error al cargar eventos: " + e.getMessage());
         }
 
-        // Refrescar eventos al abrir los ComboBox
+        // Refrescar eventos al abrir el ComboBox de venta
         cmbEvento.setOnShowing(event ->
                 ventaController.cargarEventos(cmbEvento)
-        );
-
-        cmbEventoResumen.setOnShowing(event ->
-                reporteController.cargarEventos(cmbEventoResumen)
         );
 
         // Al abrir cualquiera de las tres secciones,
@@ -97,12 +93,11 @@ public class MenuController {
     }
 
     /**
-     * Refresca los combos de venta y resumen con los eventos actuales,
-     * para que siempre reflejen los cambios hechos en otras pantallas.
+     * Refresca el combo de venta con los eventos actuales,
+     * para que siempre refleje los cambios hechos en otras pantallas.
      */
     private void cargarEventosEnCombos() {
         ventaController.cargarEventos(cmbEvento);
-        reporteController.cargarEventos(cmbEventoResumen);
     }
 
     @FXML
@@ -270,16 +265,16 @@ public class MenuController {
 
     @FXML
     private void mostrarResumenEvento() {
-        cargarEventosEnCombos();
-
-        Evento evento = cmbEventoResumen.getValue();
-
-        if (evento == null) {
-            mostrarError("Seleccione un evento.");
-            return;
-        }
-
         try {
+
+            int id = Integer.parseInt(txtIdResumen.getText());
+
+            Optional<Evento> opt = EVENTO_SERVICE.buscarEvento(id);
+            if (opt.isEmpty()) {
+                mostrarError("No existe un evento con ese ID.");
+                return;
+            }
+            Evento evento = opt.get();
 
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/ResumenEvento.fxml")
@@ -293,8 +288,12 @@ public class MenuController {
 
             contenidoPane.getChildren().setAll(vista);
 
+        } catch (NumberFormatException e) {
+            mostrarError("Ingrese un ID válido.");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            mostrarError("Error al buscar evento: " + e.getMessage());
         }
     }
 
