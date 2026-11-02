@@ -160,6 +160,16 @@ public class EventoController {
     private TextField txtBuscarEvento;
 
     @FXML
+    private TextField txtBuscarId;
+
+    // Referencia al menú para abrir el resumen
+    private MenuController menuController;
+
+    public void setMenuController(MenuController menuController) {
+        this.menuController = menuController;
+    }
+
+    @FXML
     private void buscarParaEditar() {
         try {
 
@@ -410,32 +420,69 @@ public class EventoController {
     @FXML
     private void initialize() {
 
-        if (tablaEventos != null) {
-
-            colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-            colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-            colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
-            colHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
-            colCapacidad.setCellValueFactory(new PropertyValueFactory<>("capacidadMaxima"));
-
-            // Permite buscar eventos por nombre
-            eventosFiltrados = new FilteredList<>(listaEventos, e -> true);
-            tablaEventos.setItems(eventosFiltrados);
-
-            if (txtBuscarEvento != null) {
-                txtBuscarEvento.textProperty().addListener((obs, anterior, nuevo) -> {
-                    String busqueda = nuevo == null ? "" : nuevo.trim().toLowerCase();
-
-                    eventosFiltrados.setPredicate(evento ->
-                            busqueda.isEmpty() ||
-                                    evento.getNombre().toLowerCase().contains(busqueda)
-                    );
-                });
-            }
-
-            // Carga los eventos al abrir la pantalla
-            cargarEventos();
+        if (tablaEventos == null) {
+            return;
         }
+
+        // Configurar columnas
+        colId.setCellValueFactory(
+                new PropertyValueFactory<>("id"));
+
+        colNombre.setCellValueFactory(
+                new PropertyValueFactory<>("nombre"));
+
+        colFecha.setCellValueFactory(
+                new PropertyValueFactory<>("fecha"));
+
+        colHora.setCellValueFactory(
+                new PropertyValueFactory<>("hora"));
+
+        colCapacidad.setCellValueFactory(
+                new PropertyValueFactory<>("capacidadMaxima"));
+
+        // Lista filtrada de eventos
+        eventosFiltrados = new FilteredList<>(listaEventos, e -> true);
+        tablaEventos.setItems(eventosFiltrados);
+
+        // Buscar por nombre
+        txtBuscarEvento.textProperty().addListener(
+                (obs, anterior, nuevo) -> aplicarFiltros());
+
+        // Buscar por ID
+        txtBuscarId.textProperty().addListener(
+                (obs, anterior, nuevo) -> aplicarFiltros());
+
+        // Doble clic exclusivamente en la columna Nombre
+        colNombre.setCellFactory(columna -> {
+
+            TableCell<Evento, String> celda = new TableCell<>() {
+                @Override
+                protected void updateItem(String texto, boolean vacia) {
+                    super.updateItem(texto, vacia);
+                    setText(vacia ? null : texto);
+                    setStyle(vacia ? "" : "-fx-cursor: hand;");
+                }
+            };
+
+            celda.setOnMouseClicked(click -> {
+
+                if (click.getClickCount() == 2
+                        && !celda.isEmpty()
+                        && menuController != null) {
+
+                    Evento seleccionado = celda.getTableRow().getItem();
+
+                    if (seleccionado != null) {
+                        menuController.abrirResumenDesdeTabla(seleccionado);
+                    }
+                }
+            });
+
+            return celda;
+        });
+
+        cargarEventos();
+
     }
 
     @FXML
@@ -461,6 +508,23 @@ public class EventoController {
             alerta.setContentText("Error al cargar eventos: " + e.getMessage());
             alerta.showAndWait();
         }
+    }
+
+    private void aplicarFiltros() {
+
+        String nombre = txtBuscarEvento.getText().trim().toLowerCase();
+        String id = txtBuscarId.getText().trim();
+
+        eventosFiltrados.setPredicate(evento -> {
+
+            boolean coincideNombre = nombre.isEmpty()
+                    || evento.getNombre().toLowerCase().contains(nombre);
+
+            boolean coincideId = id.isEmpty()
+                    || String.valueOf(evento.getId()).equals(id);
+
+            return coincideNombre && coincideId;
+        });
     }
 
 }

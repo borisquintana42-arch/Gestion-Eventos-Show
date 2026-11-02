@@ -158,6 +158,7 @@ public class MenuController {
             vista.setId("editarEventoBusquedaView");
 
             EventoController controller = loader.getController();
+            controller.setMenuController(this);
             controller.setContenedor(contenidoPane);
 
             contenidoPane.getChildren().setAll(vista);
@@ -220,6 +221,7 @@ public class MenuController {
             EventoController controller = loader.getController();
 
             controller.setContenedor(contenidoPane);
+            controller.setMenuController(this);
 
             // AQUÍ cargamos los eventos explícitamente
             controller.cargarEventos();
@@ -320,6 +322,35 @@ public class MenuController {
 
         } catch (IOException e) {
             mostrarError("No se pudo abrir el historial: " + e.getMessage());
+        }
+    }
+
+    public void abrirResumenDesdeTabla(Evento evento) {
+
+        if (evento == null) {
+            return;
+        }
+
+        try {
+            // Cargar la pantalla de resumen
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/ResumenEvento.fxml")
+            );
+
+            Parent vista = loader.load();
+
+            // Mostrar la información del evento seleccionado
+            ReporteController controller = loader.getController();
+            controller.inicializarResumen(evento, contenidoPane);
+
+            // Abrir el resumen en el panel derecho
+            contenidoPane.getChildren().setAll(vista);
+
+        } catch (Exception e) {
+            new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "No se pudo abrir el resumen: " + e.getMessage()
+            ).showAndWait();
         }
     }
 

@@ -28,6 +28,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TextField fx:id="txtBuscarEvento" layoutX="57.0" layoutY="74.0" prefHeight="26.0" prefWidth="346.0" />
+      <TextField fx:id="txtBuscarEvento" layoutX="25.0" layoutY="75.0" prefHeight="26.0" prefWidth="178.0" promptText="Buscar por nombre..." />
+      <TextField fx:id="txtBuscarId" layoutX="211.0" layoutY="75.0" prefHeight="26.0" prefWidth="178.0" promptText="Buscar por id..." />
    </children>
 </AnchorPane>
