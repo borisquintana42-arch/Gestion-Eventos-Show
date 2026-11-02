@@ -28,6 +28,6 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TextField fx:id="txtBuscarEvento" layoutX="57.0" layoutY="74.0" prefHeight="26.0" prefWidth="346.0" text="Buscar evento por nombre..." />
+      <TextField fx:id="txtBuscarEvento" layoutX="57.0" layoutY="74.0" prefHeight="26.0" prefWidth="346.0" />
    </children>
 </AnchorPane>

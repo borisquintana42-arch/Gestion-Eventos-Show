@@ -10,32 +10,44 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="neon" stylesheets="@diseño/estilo_neon.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
    <children>
-      <Label layoutX="89.0" layoutY="39.0" prefHeight="50.0" prefWidth="722.0" text="Gestión De Eventos Y Shows" textOverrun="WORD_ELLIPSIS">
+      <Label layoutX="89.0" layoutY="39.0" prefHeight="50.0" prefWidth="722.0" stylesheets="@diseño/estilo_neon.css" text="Gestión De Eventos Y Shows" textOverrun="WORD_ELLIPSIS">
          <font>
             <Font name="THESOLSTICE-Regular" size="28.0" />
          </font>
       </Label>
        <Accordion fx:id="menuAccordion" layoutX="28.0" layoutY="120.0" prefHeight="453.0" prefWidth="421.0">
         <panes>
-          <TitledPane fx:id="paneAdministrar" animated="false" prefWidth="222.0" text="Administrar eventos y reservas">
+          <TitledPane fx:id="paneAdministrar" animated="false" prefWidth="222.0" styleClass="titulo-figma" stylesheets="@diseño/estilo_neon.css" text="Administrar eventos y reservas">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="220.0">
                      <children>
-                        <VBox layoutX="13.0" prefHeight="376.0" prefWidth="406.0">
+                        <VBox layoutX="13.0" prefHeight="376.0" prefWidth="406.0" style="-fx-background-color: transparent; -fx-background-color: transparent;">
                            <children>
-                              <Button fx:id="btnCrearEvento" mnemonicParsing="false" onAction="#abrirCrearEvento" prefHeight="142.0" prefWidth="418.0" text="Crear evento" />
-                              <Button fx:id="btnEditarEvento" mnemonicParsing="false" onAction="#abrirEditarEvento" prefHeight="142.0" prefWidth="410.0" text="Editar evento" />
-                              <Button fx:id="btnEliminarEvento" mnemonicParsing="false" onAction="#abrirEliminarEvento" prefHeight="142.0" prefWidth="410.0" text="Eliminar evento" />
-                              <Button fx:id="btnVerEventos" mnemonicParsing="false" onAction="#abrirVerEventos" prefHeight="142.0" prefWidth="410.0" text="Ver eventos" />
+                              <Button fx:id="btnCrearEvento" mnemonicParsing="false" onAction="#abrirCrearEvento" prefHeight="142.0" prefWidth="418.0" styleClass="boton-menu" text="Crear evento" textFill="WHITE">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font></Button>
+                              <Button fx:id="btnEditarEvento" mnemonicParsing="false" onAction="#abrirEditarEvento" prefHeight="142.0" prefWidth="410.0" styleClass="boton-menu" text="Editar evento" textFill="WHITE">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font></Button>
+                              <Button fx:id="btnEliminarEvento" mnemonicParsing="false" onAction="#abrirEliminarEvento" prefHeight="142.0" prefWidth="410.0" styleClass="boton-menu" text="Eliminar evento" textFill="WHITE">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font></Button>
+                              <Button fx:id="btnVerEventos" mnemonicParsing="false" onAction="#abrirVerEventos" prefHeight="142.0" prefWidth="410.0" styleClass="boton-menu" text="Ver eventos" textFill="#e4e4e4">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font></Button>
                            </children>
                         </VBox>
                      </children>
                   </AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane fx:id="paneVenta" animated="false" text="Venta de boletos">
+          <TitledPane fx:id="paneVenta" animated="false" styleClass="titulo-figma" text="Venta de boletos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -67,7 +79,7 @@
                                                 <Font size="20.0" />
                                              </font>
                                           </Label>
-                                          <Button layoutX="174.0" layoutY="178.0" mnemonicParsing="false" onAction="#mostrarVenta" text="Enviar" />
+                                          <Button layoutX="174.0" layoutY="178.0" mnemonicParsing="false" onAction="#mostrarVenta" styleClass="boton-menu" text="Enviar" textFill="WHITE" />
                                        </children>
                                     </AnchorPane>
                               </content>
@@ -81,7 +93,7 @@
                                                 <Font size="24.0" />
                                              </font>
                                           </Label>
-                                          <Button layoutX="126.0" layoutY="102.0" mnemonicParsing="false" onAction="#abrirHistorialVentas" prefHeight="41.0" prefWidth="144.0" text="Consultar historial" />
+                                          <Button layoutX="126.0" layoutY="102.0" mnemonicParsing="false" onAction="#abrirHistorialVentas" prefHeight="41.0" prefWidth="144.0" styleClass="boton-menu" text="Consultar historial" textFill="WHITE" />
                                        </children>
                                     </AnchorPane>
                               </content>
@@ -91,7 +103,7 @@
                      </children></AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane fx:id="paneResumen" animated="false" text="Resumen de eventos">
+          <TitledPane fx:id="paneResumen" animated="false" styleClass="titulo-figma" text="Resumen de eventos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -111,7 +123,7 @@
                            </font>
                         </Label>
                         <ComboBox fx:id="cmbEventoResumen" layoutX="234.0" layoutY="175.0" prefWidth="150.0" />
-                        <Button layoutX="274.0" layoutY="225.0" mnemonicParsing="false" onAction="#mostrarResumenEvento" text="Ver resumen" />
+                        <Button layoutX="274.0" layoutY="225.0" mnemonicParsing="false" onAction="#mostrarResumenEvento" styleClass="boton-neon" text="Ver resumen" textFill="WHITE" />
                      </children></AnchorPane>
             </content>
           </TitledPane>

@@ -1,0 +1,247 @@
+/* Estilo JavaFX para Gestion de eventos y shows.
+ * Agregar este archivo en Properties > Stylesheets del AnchorPane principal.
+ * Agregar la clase neon en Properties > Style Class (sin punto).
+ * Guardar fondo-neon.png al lado de este archivo.
+ * No modifica fx:id, acciones, controladores, posiciones ni fuentes elegidas.
+ * Revision: botones sin resplandor al pasar el mouse y encabezados
+ * sin relleno adicional, para reducir cambios de limites en el editor.
+ */
+
+.neon {
+    -fx-base: #191226;
+    -fx-background: #100919;
+    -fx-control-inner-background: #171021;
+    -fx-control-inner-background-alt: #20172d;
+    -fx-text-base-color: #f8f5ff;
+    -fx-text-background-color: #f8f5ff;
+    -fx-accent: #9cff00;
+    -fx-focus-color: #9cff00;
+    -fx-faint-focus-color: rgba(156, 255, 0, 0.16);
+    -fx-selection-bar: #9cff00;
+    -fx-selection-bar-non-focused: #4b3c5f;
+    -fx-selection-bar-text: #101010;
+    -fx-highlight-fill: #9cff00;
+    -fx-highlight-text-fill: #101010;
+    -fx-mark-color: #9cff00;
+    -fx-background-color: #100919;
+    -fx-background-image: url("fondo-neon.png");
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+/* Etiquetas: conserva la familia y el tamano de letra del FXML. */
+.neon .label {
+    -fx-text-fill: #f8f5ff;
+}
+
+/* Los botones existentes reciben el estilo verde al cargar el tema. */
+.neon .button {
+    -fx-background-color: #9cff00;
+    -fx-background-insets: 0;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-radius: 9;
+    -fx-text-fill: #101010;
+    -fx-graphic-text-gap: 8;
+    -fx-cursor: hand;
+    -fx-effect: none;
+}
+
+.neon .button:hover {
+    -fx-background-color: #b3ff40;
+    -fx-effect: none;
+}
+
+.neon .button:armed {
+    -fx-background-color: #7bce00;
+    -fx-effect: none;
+}
+
+.neon .button:focused {
+    -fx-border-color: #00ead6;
+}
+
+.neon .button:disabled {
+    -fx-opacity: 0.45;
+    -fx-effect: none;
+}
+
+/* Variantes opcionales: agregar uno de estos nombres en Style Class. */
+.neon .button.boton-oscuro {
+    -fx-background-color: #111111;
+    -fx-text-fill: #ffffff;
+}
+
+.neon .button.boton-borde {
+    -fx-background-color: #111111;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #9cff00;
+}
+
+.neon .button.boton-gris {
+    -fx-background-color: #5c5c5c;
+    -fx-text-fill: #ffffff;
+}
+
+.neon .button.boton-oscuro:hover,
+.neon .button.boton-borde:hover {
+    -fx-background-color: #252525;
+}
+
+.neon .button.boton-gris:hover {
+    -fx-background-color: #727272;
+}
+
+.neon .button.boton-oscuro:armed,
+.neon .button.boton-borde:armed,
+.neon .button.boton-gris:armed {
+    -fx-background-color: #080808;
+}
+
+.neon .button.boton-borde:focused {
+    -fx-border-color: #00ead6;
+}
+
+/* Campos y desplegables reales; conservan la escritura y las opciones. */
+.neon .text-field,
+.neon .text-area,
+.neon .combo-box-base {
+    -fx-background-color: #151020;
+    -fx-background-insets: 0;
+    -fx-background-radius: 9;
+    -fx-border-color: #9cff00;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #b9aec9;
+}
+
+.neon .text-field,
+.neon .text-area {
+    -fx-padding: 6 10;
+}
+
+.neon .text-field:focused,
+.neon .text-area:focused,
+.neon .combo-box-base:focused {
+    -fx-border-color: #00ead6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 234, 214, 0.32), 9, 0, 0, 0);
+}
+
+.neon .combo-box > .list-cell {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: transparent;
+}
+
+.neon .combo-box-base > .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.neon .combo-box-base > .arrow-button > .arrow {
+    -fx-background-color: #9cff00;
+}
+
+/* Evita dibujar dos bordes en un ComboBox editable o DatePicker. */
+.neon .combo-box-base > .text-field {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+    -fx-effect: none;
+}
+
+.neon .text-area .content {
+    -fx-background-color: #151020;
+    -fx-background-radius: 7;
+}
+
+/* Opcional: campo claro parecido al ejemplo blanco de Figma. */
+.neon .text-field.campo-claro,
+.neon .combo-box-base.campo-claro {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111111;
+    -fx-prompt-text-fill: #666666;
+}
+
+.neon .combo-box.campo-claro > .list-cell,
+.neon .combo-box-base.campo-claro > .text-field {
+    -fx-text-fill: #111111;
+}
+
+.neon .combo-box-base.campo-claro > .arrow-button > .arrow {
+    -fx-background-color: #111111;
+}
+
+/* Secciones del Accordion: se conserva su comportamiento. */
+.neon .titled-pane {
+    -fx-text-fill: #f8f5ff;
+}
+
+.neon .titled-pane > .title {
+    -fx-background-color: #6f408e, rgba(18, 12, 30, 0.96);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 7, 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.neon .titled-pane:expanded > .title {
+    -fx-background-color: #ff46d2, rgba(18, 12, 30, 0.96);
+}
+
+.neon .titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: #9cff00;
+}
+
+.neon .titled-pane > .content {
+    -fx-background-color: rgba(18, 12, 30, 0.90);
+    -fx-border-color: #513166;
+}
+
+.neon .table-view,
+.neon .list-view {
+    -fx-background-color: #171021;
+    -fx-border-color: #6f408e;
+    -fx-background-insets: 0;
+}
+
+/* Opcionales: aplicar solo al titulo principal o a un panel de contenido. */
+.neon .titulo-neon {
+    -fx-text-fill: linear-gradient(to right, #ff56de, #bb81ff, #00ead6);
+    -fx-effect: dropshadow(gaussian, rgba(255, 70, 210, 0.65), 15, 0.10, 0, 0);
+}
+
+.neon .panel-neon {
+    -fx-background-color: rgba(18, 12, 30, 0.92);
+    -fx-background-radius: 12;
+    -fx-border-color: #6f408e;
+    -fx-border-radius: 11;
+}
+
+/* Agregar al AnchorPane principal para ver la imagen entera sin recorte. */
+.neon.fondo-completo {
+    -fx-background-size: contain;
+}
+
+/* Botones grandes del menú de eventos */
+.neon .button.boton-menu {
+    -fx-background-color: #351447;
+    -fx-border-color: #9cff00;
+    -fx-border-width: 2;
+    -fx-background-radius: 10;
+    -fx-border-radius: 9;
+    -fx-text-fill: #ffffff;
+    -fx-effect: none;
+}
+
+/* Al pasar el mouse */
+.neon .button.boton-menu:hover {
+    -fx-background-color: #57246e;
+    -fx-border-color: #b3ff40;
+}
+
+/* Al presionar el botón */
+.neon .button.boton-menu:armed {
+    -fx-background-color: #251033;
+}
+
